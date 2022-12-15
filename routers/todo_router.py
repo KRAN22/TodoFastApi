@@ -1,7 +1,6 @@
 from fastapi import APIRouter,Depends,status,HTTPException
 from sqlalchemy.orm import Session
-from fastapi.encoders import jsonable_encoder
-from schemas import CreateTodo, UpdateTodo,LogConfig
+from schemas import CreateTodo, UpdateTodo
 import model
 from database import get_db
 import logging 
