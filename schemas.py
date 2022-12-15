@@ -59,3 +59,14 @@ class LogConfig(BaseModel):
     loggers = {
         "FastApi": {"handlers": ["default"], "level": LOG_LEVEL},
     }
+
+class CreateUser(BaseModel):
+    
+    username : str
+    email : str
+    password : str
+    todo_id : Optional[str]
+    
+    class Config:
+        orm_mode = True
+       
