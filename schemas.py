@@ -69,4 +69,11 @@ class CreateUser(BaseModel):
     
     class Config:
         orm_mode = True
+        schema_extra={
+            'example':{
+                'username':'kranthi',
+                'email':'kranthi@gmail.com',
+                'password': 'password'
+            }
+        }
        
