@@ -75,8 +75,9 @@ def update_todo(id:int,todo:UpdateTodo,db:Session=Depends(get_db)):
     
     
     db.commit()
+    db.refresh(db_todo)
     
-    return "successfully updated..."
+    return db_todo
         
         
         
