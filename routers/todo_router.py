@@ -43,7 +43,7 @@ def get_todo_by_id(id:int,db:Session=Depends(get_db)):
     db_todo = db.query(model.Todo).filter(model.Todo.id==id).first()
     
     if not db_todo:
-        logger.error(f"With this id {id} no todo Fount")
+        logger.error(f"With this id {id} no todo Found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"With this id {id} not available todos"
                             )
