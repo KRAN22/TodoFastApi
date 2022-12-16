@@ -6,7 +6,7 @@ from sqlalchemy.orm import relationship
 
 class Todo(Base):
     
-    __tablename__ = "todolist"
+    __tablename__ = "todo"
     
     STATUS = (
         ("CREATED" , "created"),
@@ -18,6 +18,7 @@ class Todo(Base):
     title = Column(String(255))
     description = Column(String(255))
     status = Column(ChoiceType(choices=STATUS),default="CREATED")
+    user_id = Column(Integer,ForeignKey('user.id'))
     
     todo = relationship('User', back_populates = 'user')
     
@@ -26,16 +27,15 @@ class Todo(Base):
     
     
 class User(Base):
-    __tablename__ = "userlist"
+    __tablename__ = "user"
     
     id = Column(Integer,primary_key=True,index= True,autoincrement=True)
     username = Column(String(255))
     email = Column(String(255))
     password = Column(String(255))
-    todo_id = Column(Integer,ForeignKey('todolist.id'))
-    
+
     user = relationship('Todo', back_populates = 'todo')
-    
+
     def __repr__(self):
         return f"<Order {self.username}>"
     

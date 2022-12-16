@@ -7,6 +7,7 @@ class CreateTodo(BaseModel):
     title : str
     description : str
     status : Optional[str] = "CREATED"
+    user_id : int
     
     class Config:
         orm_mode = True
@@ -14,6 +15,7 @@ class CreateTodo(BaseModel):
             'example':{
                 'title':'The Dog',
                 'description':'This my Gog story',
+                "user_id": 1
             }
         }
 
@@ -65,7 +67,6 @@ class CreateUser(BaseModel):
     username : str
     email : str
     password : str
-    todo_id : Optional[str]
     
     class Config:
         orm_mode = True
@@ -77,3 +78,16 @@ class CreateUser(BaseModel):
             }
         }
        
+class SignUp(BaseModel):
+    
+    username : str
+    password : str
+    
+    class Config:
+        orm_mode = True
+        schema_extra={
+            'example':{
+                'username': 'kranthi',
+                'password' : 'password'
+            }
+        }
