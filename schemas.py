@@ -20,6 +20,7 @@ class CreateTodo(BaseModel):
         }
 
 class UpdateTodo(BaseModel):
+    
     title : Optional[str]
     description : Optional[str]
     status : Optional[str]

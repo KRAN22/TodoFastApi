@@ -1,6 +1,7 @@
 from fastapi import APIRouter,Depends,status,HTTPException
 from sqlalchemy.orm import Session
 from schemas import CreateTodo, UpdateTodo
+from fastapi.encoders import jsonable_encoder
 import model
 from database import get_db
 import logging 
@@ -14,8 +15,8 @@ router = APIRouter(
 )
         
 #Create to with user
-@router.post("/user_todo",status_code=status.HTTP_201_CREATED)
-def create_user_todo(todo:CreateTodo,db:Session=Depends(get_db)):
+@router.post("/todo",status_code=status.HTTP_201_CREATED)
+def create_todo(todo:CreateTodo,db:Session=Depends(get_db)):
     logger.info("Get userTodo request received.....")
     
     db_user = db.query(model.User).filter(model.User.id == todo.user_id).first()    
@@ -38,12 +39,24 @@ def create_user_todo(todo:CreateTodo,db:Session=Depends(get_db)):
               
 #Get the user todos  
 @router.get("/")
-def get_all_user_todo(db:Session=Depends(get_db)):
-    logger.info("Get the userTodo request received....")
-    db_todo = db.query(model.Todo).all()
-    logger.info("Successfully get the user todos....")
-    return db_todo
-
+def get_todo(user_id:int|None=None,title: str|None=None ,db:Session=Depends(get_db)):
+    logger.info("Get todo request received....")
+    queries = []
+    if user_id:
+        queries.append(model.Todo.user_id==user_id)
+    if title:
+        queries.append(model.Todo.title==title)
+        
+    todos = db.query(model.Todo).filter(*queries).all()
+    
+    if todos:
+        logger.info(f"Successfully get all todos with title '{title}' and user id '{user_id}'")
+        return todos
+    
+    logger.error(f"with this user id {user_id} and Title {title} no todos available")
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"with this user id {user_id} and Title {title} no todos available"
+                            )
 #get todo with todo_id
 @router.get("/{todo_id}",status_code=status.HTTP_200_OK)
 def get_todo_by_id(todo_id:int,db:Session=Depends(get_db)): 
@@ -57,24 +70,4 @@ def get_todo_by_id(todo_id:int,db:Session=Depends(get_db)):
                             )
     logger.info("Successfully get the all todos by id..")
     return db_todo
-
-@router.get("/todoUser/")
-def search_todo(user_id:int|None=None,title: str|None=None ,db:Session=Depends(get_db)):
-    logger.info("get todo request received...")
-    
-    if user_id:
-        db_todo = db.query(model.Todo).filter(model.Todo.user_id==user_id).all()
-    
-    if title:
-        db_todo = db.query(model.Todo).filter(model.Todo.title==title).all()
-    
-    if user_id and title:
-        db_todo = db.query(model.Todo).filter(model.Todo.title==title, model.Todo.user_id==user_id).all()
-    
-    if not db_todo:
-        logger.error(f"With this id {user_id or title} no todo Found")
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                            detail=f"With this user_id {user_id or title} not available todos"
-                            )
-    logger.info("Successfully get the all todes by user_id..")
-    return db_todo
+  
