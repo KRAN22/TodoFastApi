@@ -14,12 +14,12 @@ router = APIRouter(
 @router.get("/")
 def get_todo(user_id:int|None=None,title: str|None=None,db:Session=Depends(get_db)):
     logger.info("Get userTodo request received.....")
-    return todo_services.getAllTodos(user_id,title,db)
+    return todo_services.getAll(user_id,title,db)
 
 #get todo with todo_id
 @router.get("/{id}",status_code=status.HTTP_200_OK)
 def get_todo_by_id(id:int,db:Session=Depends(get_db)): 
-    return todo_services.getTodoById(id,db)
+    return todo_services.getById(id,db)
   
 # Create to with user
 @router.post("/",status_code=status.HTTP_201_CREATED)

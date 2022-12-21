@@ -1,49 +1,39 @@
 from fastapi import HTTPException,status
 from sqlalchemy.orm import Session
-from werkzeug.security import generate_password_hash
 import model
 import logging
 
 
 logger = logging.getLogger("FastApi")
 
-def getUser(queries,db):
+def getAll(queries,db):
     return db.query(*queries).all()
 
-def getUserById(queries,db):
-    db_user =  db.query(model.User).filter(*queries).first()   
-    if not db_user:
-        logger.error(f" No user Found")
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                            detail=f"No user Found in database"
-                            )
-    logger.info("Successfully get the user by using id")
-    return db_user
+def getAllByUserName(username, db):
+    queries = []
+    queries.append(model.User.username == username)
+    return db.query(model.User).filter(*queries).first()
 
-def createUser(queries,user,db:Session):
-    db_user = db.query(model.User).filter(*queries).first()
-    if db_user:
-        logger.error("The user name is already excited..")
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                            detail="The userName is already excited..."
-                            )
-    new_user = model.User(username = user.username,
-                          email=user.email,
-                          password = generate_password_hash(user.password))
-    db.add(new_user)
+def getByEmail(email,db):
+    return db.query(model.User).filter(model.User.email == email).first()
+
+def getById(id,db):
+    return  db.query(model.User).filter(model.User.id == id).first()
+
+def createUser(user,db:Session):
+    db.add(user)
     db.commit()
-    db.refresh(new_user)
-    logger.info("Successfully Created new user....")
-    return new_user
+    db.refresh(user)
+    return user
 
-def deleteUser(queries,db:Session):
-    db_user = db.query(model.User).filter(*queries).first()
-    if not db_user:
+def deleteUser(id,db:Session):
+    user = db.query(model.User).filter(model.User.id == id).first()
+    if not user:
         logger.error("The user is Not excited..")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail="The user is Not  excited..."
                             )
-    db.delete(db_user)
+    db.delete(user)
     db.commit()
     logger.info("Successfully deleted user....")
     return status.HTTP_204_NO_CONTENT

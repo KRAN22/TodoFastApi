@@ -1,50 +1,28 @@
-from fastapi import status, HTTPException
 from sqlalchemy.orm import Session
 import model
-from routers.user_router import logger
+from logger import logger
+from fastapi import status, HTTPException
 
 
-def getAllTodo(queries, db):
+def getAll(queries, db):
     return db.query(model.Todo).filter(*queries).all()
 
-def getTodoById(queries, db:Session): 
-    db_todo = db.query(model.Todo).filter(*queries).first()
-    
-    if not db_todo:
-        logger.error(f"No Todos Found")
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                            detail=f"Not available todos"
-                            )
-    logger.info("Successfully get the all todos by id..")
-    return db_todo
+def getById(id, db:Session): 
+    return db.query(model.Todo).filter(model.Todo.id==id).first()
 
-def createTodo(queries,todo,db:Session):
-    db_user = db.query(model.User).filter(*queries).first()    
-    
-    if not db_user:
-        logger.error(f"user did't excited")
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                            detail=f"with this id {todo.user_id} no user excited")
-    new_todo = model.Todo(
-                    title = todo.title,
-                    description = todo.description,
-                    user_id = todo.user_id            
-                )
-    db.add(new_todo)
+def createTodo(todo,db:Session):
+    db.add(todo)
     db.commit()
-    db.refresh(new_todo)
-    
-    logger.info("Successfully created the user todo...")
-    return new_todo
+    db.refresh(todo)
+    return todo
 
-def deleteTodo(queries,db:Session):
-    db_user = db.query(model.Todo).filter(*queries).first()
-    if not db_user:
+def deleteTodo(id,db:Session):
+    todo = db.query(model.Todo).filter(model.Todo.id == id).first()
+    if not todo:
         logger.error("The Todo is Not excited..")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail="The Todo is Not  excited..."
                             )
-    db.delete(db_user)
+    db.delete(todo)
     db.commit()
-    logger.info("Successfully deleted Todo....")
     return status.HTTP_204_NO_CONTENT
