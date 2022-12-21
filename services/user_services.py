@@ -18,4 +18,10 @@ def createUser(user,db):
     queries.append(model.User.username == user.username)
     
     return user_repo.createUser(queries,user,db)
+
+def deleteUser(id,db):
+    queries = []
+    queries.append(model.User.id == id)
+    
+    return user_repo.deleteUser(queries,db)
     

@@ -35,3 +35,15 @@ def createUser(queries,user,db:Session):
     db.refresh(new_user)
     logger.info("Successfully Created new user....")
     return new_user
+
+def deleteUser(queries,db:Session):
+    db_user = db.query(model.User).filter(*queries).first()
+    if not db_user:
+        logger.error("The user is Not excited..")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail="The user is Not  excited..."
+                            )
+    db.delete(db_user)
+    db.commit()
+    logger.info("Successfully deleted user....")
+    return status.HTTP_204_NO_CONTENT
