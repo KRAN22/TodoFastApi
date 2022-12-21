@@ -15,7 +15,7 @@ router = APIRouter(
 )
 
 # Create a User 
-@router.post("/",status_code=status.HTTP_201_CREATED)
+@router.post("/signIn",status_code=status.HTTP_201_CREATED)
 def create_user(user:CreateUser,db:Session=Depends(get_db)):
     logger.info("Create user request received...")
     return user_services.createUser(user,db)

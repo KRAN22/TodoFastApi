@@ -23,3 +23,9 @@ def createTodo(todo, db:Session):
     
     return todo_repo.createTodo(queries,todo,db)
    
+def deleteTodo(id,db):
+    queries = []
+    queries.append(model.Todo.id == id)
+    
+    return todo_repo.deleteTodo(queries,db)
+    

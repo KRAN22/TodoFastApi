@@ -26,3 +26,8 @@ def get_todo_by_id(id:int,db:Session=Depends(get_db)):
 def create_todo(todo:CreateTodo,db:Session=Depends(get_db)):
     logger.info("Get userTodo request received.....")
     return todo_services.createTodo(todo,db)
+
+@router.delete("/deleteTodo/{id}")
+def destroy_todo(id:int,db:Session=Depends(get_db)):
+    logger.info("Delete Todo request received.....")
+    return todo_services.deleteTodo(id,db)

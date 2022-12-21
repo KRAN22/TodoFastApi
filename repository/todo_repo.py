@@ -37,3 +37,14 @@ def createTodo(queries,todo,db:Session):
     logger.info("Successfully created the user todo...")
     return new_todo
 
+def deleteTodo(queries,db:Session):
+    db_user = db.query(model.Todo).filter(*queries).first()
+    if not db_user:
+        logger.error("The Todo is Not excited..")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail="The Todo is Not  excited..."
+                            )
+    db.delete(db_user)
+    db.commit()
+    logger.info("Successfully deleted Todo....")
+    return status.HTTP_204_NO_CONTENT
