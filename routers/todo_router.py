@@ -13,21 +13,32 @@ router = APIRouter(
 #Get the user todos  
 @router.get("/")
 def get_todo(user_id:int|None=None,title: str|None=None,db:Session=Depends(get_db)):
-    logger.info("Get userTodo request received.....")
-    return todo_services.getAll(user_id,title,db)
+    logger.info("Get request received.....")
+    result =  todo_services.getAll(user_id,title,db)
+    logger.info(" Successfully Get todo.....")
+    return result
 
 #get todo with todo_id
 @router.get("/{id}",status_code=status.HTTP_200_OK)
 def get_todo_by_id(id:int,db:Session=Depends(get_db)): 
-    return todo_services.getById(id,db)
+    logger.info("Get request received.....")
+    result =  todo_services.getById(id,db)
+    logger.info(" Successfully Get todo.....")
+    return result
+
   
 # Create to with user
 @router.post("/",status_code=status.HTTP_201_CREATED)
 def create_todo(todo:CreateTodo,db:Session=Depends(get_db)):
-    logger.info("Get userTodo request received.....")
-    return todo_services.createTodo(todo,db)
+    logger.info(" create request received.....")
+    result = todo_services.createTodo(todo,db)
+    logger.info(" Successfully create todo.....")
+    return result
+
 
 @router.delete("/deleteTodo/{id}")
 def destroy_todo(id:int,db:Session=Depends(get_db)):
     logger.info("Delete Todo request received.....")
-    return todo_services.deleteTodo(id,db)
+    result =  todo_services.deleteTodo(id,db)
+    logger.info("Successfully Delete todo....")
+    return result

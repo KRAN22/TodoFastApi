@@ -13,8 +13,9 @@ def getAll(user_id,title,db):
     if title:
         queries.append(model.Todo.title==title)
 
-    return todo_repo.getAll(queries,db)
-
+    result = todo_repo.getAll(queries,db)
+    return result
+    
 def getById(id,db):
     todo = todo_repo.getById(id,db)
     if not todo:
@@ -37,7 +38,9 @@ def createTodo(todo, db:Session):
                     description = todo.description,
                     user_id = todo.user_id            
                 )
-    return todo_repo.createTodo(new_todo,db)
-
+    result = todo_repo.createTodo(new_todo,db)
+    return result
+    
 def deleteTodo(id,db):
-    return todo_repo.deleteTodo(id, db)
+    result = todo_repo.deleteTodo(id, db)
+    return result

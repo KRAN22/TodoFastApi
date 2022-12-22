@@ -12,13 +12,16 @@ def getAll(queries,db):
 def getAllByUserName(username, db):
     queries = []
     queries.append(model.User.username == username)
-    return db.query(model.User).filter(*queries).first()
-
+    result =  db.query(model.User).filter(*queries).first()
+    return result
+    
 def getByEmail(email,db):
-    return db.query(model.User).filter(model.User.email == email).first()
+    result = db.query(model.User).filter(model.User.email == email).first()
+    return result
 
 def getById(id,db):
-    return  db.query(model.User).filter(model.User.id == id).first()
+    result =   db.query(model.User).filter(model.User.id == id).first()
+    return result
 
 def createUser(user,db:Session):
     db.add(user)

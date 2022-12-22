@@ -7,10 +7,12 @@ from fastapi import HTTPException,status
 def getAll(db):
     queries = []
     queries.append(model.User)
-    return user_repo.getAll(queries,db)
+    result = user_repo.getAll(queries,db)
+    return result
 
 def getById(id,db):
-    return user_repo.getById(id,db)
+    result = user_repo.getById(id,db)
+    return result
 
 def createUser(user,db):
     users = user_repo.getAllByUserName(user.username,db)
@@ -23,8 +25,10 @@ def createUser(user,db):
                           email=user.email,
                           password = generate_password_hash(user.password))
     
-    return user_repo.createUser(new_user,db)
+    result =  user_repo.createUser(new_user,db)
+    return result
 
 def deleteUser(id,db):    
-    return user_repo.deleteUser(id,db)
+    result = user_repo.deleteUser(id,db)
+    return result
     
