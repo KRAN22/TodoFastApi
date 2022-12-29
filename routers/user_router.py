@@ -38,8 +38,8 @@ def get_user_by_id(id:int,db:Session=Depends(get_db)):
     logger.info("Successfully get the user by id...")
     return result
   
-@router.delete("/delete_todo/{id}")
-def destroy_todo(id:int,db:Session=Depends(get_db)):
+@router.delete("/delete_user/{id}")
+def destroy_user(id:int,db:Session=Depends(get_db)):
     logger.info("delete user request received.....")
     result = user_services.deleteUser(id,db)
     logger.info("Successfully delete user...")
