@@ -26,3 +26,11 @@ def deleteTodo(id,db:Session):
     db.delete(todo)
     db.commit()
     return status.HTTP_204_NO_CONTENT
+
+def updateTodo(todo,db:Session):
+    db.commit()
+    db.refresh(todo)
+    return todo
+    
+    
+    

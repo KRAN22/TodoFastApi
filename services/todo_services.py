@@ -26,9 +26,8 @@ def getById(id,db):
     logger.info("Successfully get the all todos by id..")
     return todo
 
-def createTodo(todo, db:Session):
+def createTodo(todo,db:Session):      
     user = user_repo.getById(todo.user_id,db)  
-    
     if not user:
         logger.error(f"user did't excited")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
@@ -44,3 +43,23 @@ def createTodo(todo, db:Session):
 def deleteTodo(id,db):
     result = todo_repo.deleteTodo(id, db)
     return result
+
+def updateTodo(id,todo,db):
+    current_todo = todo_repo.getById(id,db)
+    # current_todo = db.query(model.Todo).filter(model.Todo.id == id).first()
+    if not current_todo:
+        logger.error(f"todo did't excited")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"Todo not excited")
+    if todo.title:
+        current_todo.title = todo.title
+    if todo.description:
+        current_todo.description = todo.description
+    if todo.status:
+        current_todo.status = todo.status 
+    result = todo_repo.updateTodo(current_todo,db)
+    return result
+        
+        
+    
+    
