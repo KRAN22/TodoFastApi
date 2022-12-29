@@ -1,9 +1,8 @@
-from fastapi import APIRouter,status,Depends,HTTPException
+from fastapi import APIRouter,status,Depends
 from schemas import CreateUser
 from sqlalchemy.orm import Session
 from database import get_db
 from services import user_services
-from fastapi import status, HTTPException
 import logging
 
 
