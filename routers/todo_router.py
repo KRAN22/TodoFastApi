@@ -18,9 +18,9 @@ def get_todo(user_id:int|None=None,title: str|None=None,Authorize:AuthJWT=Depend
     try:
         Authorize.jwt_required()
     except Exception as e:
-        logger.error("Required Authorization...")
+        logger.error(e.message)
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                            detail= "Required Authorization..."
+                            detail= e.message
                             )
     result =  todo_services.getAll(user_id,title,db)
     logger.info(" Successfully Get todo.....")
@@ -33,9 +33,9 @@ def get_todo_by_id(id:int,Authorize:AuthJWT=Depends(),db:Session=Depends(get_db)
     try:
         Authorize.jwt_required()
     except Exception as e:
-        logger.error("Required Authorization...")
+        logger.error(e.message)
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                            detail= "Required Authorization..."
+                            detail= e.message
                             )
     result =  todo_services.getById(id,db)
     logger.info(" Successfully Get todo.....")
@@ -49,9 +49,9 @@ def create_todo(todo:CreateTodo,Authorize:AuthJWT=Depends(),db:Session=Depends(g
     try:
         Authorize.jwt_required()
     except Exception as e:
-        logger.error("Required Authorization...")
+        logger.error(e.message)
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                            detail= "Required Authorization..."
+                            detail= e.message
                             )
     result = todo_services.createTodo(todo,db)
     logger.info(" Successfully create todo.....")
@@ -64,9 +64,9 @@ def destroy_todo(id:int,Authorize:AuthJWT=Depends(),db:Session=Depends(get_db)):
     try:
         Authorize.jwt_required()
     except Exception as e:
-        logger.error("Required Authorization...")
+        logger.error(e.message)
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                            detail= "Required Authorization..."
+                            detail= e.message
                             )
     result =  todo_services.deleteTodo(id,db)
     logger.info("Successfully Delete todo....")
@@ -78,9 +78,9 @@ def update_todo(id:int,todo:UpdateTodo,Authorize:AuthJWT=Depends(),db:Session=De
     try:
         Authorize.jwt_required()
     except Exception as e:
-        logger.error("Required Authorization...")
+        logger.error(e.message)
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                            detail= "Required Authorization..."
+                            detail= e.message
                             )
     result = todo_services.updateTodo(id,todo,db)
     logger.info("Successfully Updated todo....")
