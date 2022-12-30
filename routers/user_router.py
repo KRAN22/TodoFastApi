@@ -1,4 +1,5 @@
-from fastapi import APIRouter,status,Depends
+from fastapi import APIRouter,status,Depends,HTTPException
+from fastapi_jwt_auth.auth_jwt import AuthJWT
 from schemas import CreateUser
 from sqlalchemy.orm import Session
 from database import get_db
@@ -38,8 +39,14 @@ def get_user_by_id(id:int,db:Session=Depends(get_db)):
     return result
   
 @router.delete("/delete_user/{id}")
-def destroy_user(id:int,db:Session=Depends(get_db)):
+def destroy_user(id:int,Authorize:AuthJWT=Depends(),db:Session=Depends(get_db)):
     logger.info("delete user request received.....")
+    try:
+        Authorize.jwt_required()
+    except Exception as e:
+        logger.info(e.message)
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                            detail=e.message)
     result = user_services.deleteUser(id,db)
     logger.info("Successfully delete user...")
     return result 
