@@ -1,10 +1,10 @@
 from werkzeug.security import check_password_hash
 from fastapi.encoders import jsonable_encoder
 from fastapi import HTTPException,status
-
+from datetime import timedelta
 from repository import user_repo
 
- 
+
 def authCreate(login,Authorize,db):
     if login.username:
         user = user_repo.getAllByUserName(login.username,db)
@@ -12,10 +12,11 @@ def authCreate(login,Authorize,db):
         user = user_repo.getByEmail(login.email,db)
         
     if user and check_password_hash(user.password,login.password):
+        expires = timedelta(days=1)
         dic= {
-            'id': user.id
+            'id': user.id,
         }
-        access_token = Authorize.create_access_token(subject=user.username, user_claims=dic)
+        access_token = Authorize.create_access_token(subject=user.username, user_claims=dic,expires_time=expires)
         refresh_token = Authorize.create_refresh_token(subject=user.username)
         
         response = {
