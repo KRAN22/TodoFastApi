@@ -12,7 +12,10 @@ def authCreate(login,Authorize,db):
         user = user_repo.getByEmail(login.email,db)
         
     if user and check_password_hash(user.password,login.password):
-        access_token = Authorize.create_access_token(subject=user.username)
+        dic= {
+            'id': user.id
+        }
+        access_token = Authorize.create_access_token(subject=user.username, user_claims=dic)
         refresh_token = Authorize.create_refresh_token(subject=user.username)
         
         response = {
